@@ -39,36 +39,36 @@ Some examples:
 "rhythm" -> "ythmrh" -> "ythmrhay" (starts with multiple consonants followed by "y")
 """
 
-def translate(text):
+def rotate(word, start=None, end=None):
+    if (start and end):
+        return word[start:] + word[:end] + 'ay'
+    return word + 'ay'
+
+def pig(word):
     vowels = ['a', 'e', 'i', 'u', 'o']
-
-    words = text.split() if len(text.split()) > 1 else text.split(",")
-
-    for index, word in enumerate(words):
-        # Rule 1
-        if (
-            word[0] in vowels or
-            word.startswith('xr') or
-            word.startswith('yt')
-        ):
-            words[index] = word + 'ay'
     
-        # Rule 3
-        elif 'qu' in word:
-            if word.startswith('qu'):
-                words[index] = word[2:] + word[:2] + 'ay'
+    if (
+        word[0] in vowels or
+        word.startswith('xr') or
+        word.startswith('yt')
+    ):
+        return rotate(word)
+
+    if 'qu' in word:
+        if word.startswith('qu'):
+            return rotate(word, 2, 2)
+        else:
+            qu_indx = word.index('qu')
+            return rotate(word, qu_indx+2, qu_indx+2)
+            
+    if not word[0] in vowels:
+        indx = 1
+        for l in word[1:]:
+            if not l in vowels and l != 'y':
+                indx += 1
             else:
-                qu_indx = word.index('qu')
-                words[index] = word[qu_indx+2:] + word[:qu_indx+2] + 'ay'
-    
-        # Rule 2 & Rule 4
-        elif not word[0] in vowels:
-            indx = 1
-            for l in word[1:]:
-                if not l in vowels and l != 'y':
-                    indx += 1
-                else:
-                    break
-            words[index] = word[indx:] + word[:indx] + 'ay'
+                break
+        return rotate(word, indx, indx)
 
-    return words[0] if len(words) == 1 else " ".join(words)
+def translate(text):
+    return ' '.join([pig(word) for word in text.split(' ')])
