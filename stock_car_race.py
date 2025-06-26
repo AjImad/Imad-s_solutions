@@ -57,27 +57,35 @@ Lap 3: Gina remains.
 """
 
 def stockCarRace(laps):
-    drivers = {}
+    drivers = {} # keep only best driver time for each lap
 
     eliminated_drivers = []
 
     for lap in laps:
         
         for driver in lap:
-            name, time = driver.split()
-            drivers[name] = int(time)
+            name, time_str = driver.split()
+            time = int(time_str)
 
-        ignore_eliminated_drivers = {key:value for key, value in drivers.items() if not key in eliminated_drivers}
+            if name not in drivers or time < drivers[name]:
+                drivers[name] = time
 
-        if ignore_eliminated_drivers:
+        remaining_drivers = {
+            key:value
+            for key, value in drivers.items()
+            if not key in eliminated_drivers
+        }
 
-            slowest_time = max(ignore_eliminated_drivers.values())
-
-            slowest_drivers = sorted([k for k, v in ignore_eliminated_drivers.items() if v == slowest_time])
-
-            eliminated_drivers.extend(slowest_drivers)
-
-        else:
+        if not remaining_drivers:
             break
+
+
+        slowest_time = max(remaining_drivers.values())
+
+        slowest_drivers = sorted([k for k, v in remaining_drivers.items() if v == slowest_time])
+
+        eliminated_drivers.extend(slowest_drivers)
+
+
 
     return eliminated_drivers
