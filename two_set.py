@@ -11,7 +11,7 @@ else:
     target = som // 2
     s1 = []
     s2 = []
-    remaining = target # track remaining sum needed - recomputation
+    remaining = target # track remaining sum needed - no recomputation
 
     for i in range(n, 0, -1):
         if i <= remaining:
