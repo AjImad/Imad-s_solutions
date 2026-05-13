@@ -1,3 +1,4 @@
+# CSES Link problem https://cses.fi/problemset/task/1094
 n = int(input())
 
 numbers = list(map(int, input().split()))
